@@ -27,7 +27,7 @@ contract CrossChainFlipACoinReceiver is CCIPReceiver, Ownable {
         uint256 optionTimestamp
     );
 
-    event FlipResult(address indexed user, bool indexed won, uint256 indexed timestamp);
+    event FlipResult(address indexed user, bool indexed won, bool isHeads, uint256 indexed optionTimestamp);
 
     mapping(address user => int256 score) public s_userScores;
 
@@ -64,7 +64,7 @@ contract CrossChainFlipACoinReceiver is CCIPReceiver, Ownable {
         } else {
             s_userScores[user] -= 1;
         }
-        emit FlipResult(user, won, block.timestamp);
+        emit FlipResult(user, won, isHeads, block.timestamp);
     }
 
     function _generateRandomBoolean() internal view returns (bool) {

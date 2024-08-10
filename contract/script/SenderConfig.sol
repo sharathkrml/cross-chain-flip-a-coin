@@ -12,7 +12,7 @@ contract SenderConfig {
 
     Config public activeConfig;
     uint64 public destinationChainSelector = 16015286601757825753; // SEPOLIA chain selector
-    address public receiver = 0x17633FFD555b5ddE735006Af7f591E41E1142B25; // will be updated after deployment
+    address public receiver = 0x96D9E26D3C6f71838aC2DceF23b256ED51a75E1A; // will be updated after deployment
 
     constructor() {
         if (block.chainid == 84532) {

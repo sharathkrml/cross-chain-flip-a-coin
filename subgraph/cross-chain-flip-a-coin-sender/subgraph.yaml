@@ -6,9 +6,9 @@ dataSources:
     name: CrossChainFlipACoinSender
     network: base-sepolia
     source:
-      address: "0x69E2753B67D23cac72b8DF2A9C9F5da80146dED9"
+      address: "0xc49526E786607a4575342f56205F3C49090443A6"
       abi: CrossChainFlipACoinSender
-      startBlock: 13761811
+      startBlock: 13769387
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

@@ -1,0 +1,7 @@
+{
+  "mainnet": {
+    "CrossChainFlipACoinReceiver": {
+      "address": "0xf0b41f8310a2e5c329f46342712f49caeb450ce7"
+    }
+  }
+}

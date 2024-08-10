@@ -1,0 +1,20 @@
+type FlipResultTxn @entity {
+  id: ID!
+  messageId: Bytes!
+  sourceChainSelector: BigInt!
+  sender: Bytes!
+  user: User!
+  option: OptionType!
+  won: Boolean!
+  optionTimestamp: BigInt!
+}
+
+type User @entity {
+  id: ID!
+  score: BigInt!
+}
+
+enum OptionType {
+  HEADS
+  TAILS
+}
