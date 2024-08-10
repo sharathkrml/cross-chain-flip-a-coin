@@ -1,0 +1,21 @@
+{
+  "name": "cross-chain-flip-a-coin-sender",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --studio crosschainflipacoinsender",
+    "create-local": "graph create --node http://localhost:8020/ cross-chain-flip-a-coin-sender",
+    "remove-local": "graph remove --node http://localhost:8020/ cross-chain-flip-a-coin-sender",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 cross-chain-flip-a-coin-sender",
+    "test": "graph test",
+    "cbd": "graph codegen && graph build && yarn deploy -l v0.0.2"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.80.0",
+    "@graphprotocol/graph-ts": "0.35.1"
+  },
+  "devDependencies": {
+    "matchstick-as": "0.5.0"
+  }
+}

@@ -1,0 +1,14 @@
+type OptionChosenTxn @entity {
+  "transactionHash+-+logIndex"
+  id: ID!
+  txHash: Bytes!
+  sender: Bytes!
+  messageId: Bytes!
+  option: OptionType!
+  timestamp: BigInt!
+}
+
+enum OptionType {
+  HEADS
+  TAILS
+}
