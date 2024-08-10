@@ -8,7 +8,6 @@ contract SenderConfig {
 
     struct Config {
         address activeRouter;
-        address linkToken;
     }
 
     Config public activeConfig;
@@ -19,8 +18,7 @@ contract SenderConfig {
         if (block.chainid == 84532) {
             // base sepolia
             address activeRouter = 0xD3b06cEbF099CE7DA4AcCf578aaebFDBd6e88a93;
-            address linkToken = 0xE4aB69C077896252FAFBD49EFD26B5D171A32410;
-            activeConfig = Config(activeRouter, linkToken);
+            activeConfig = Config(activeRouter);
         } else {
             revert UnsupportedChainId();
         }

@@ -27,7 +27,17 @@ verify-sender-base-sepolia :; forge verify-contract \
 verify-sender-base-sepolia-etherscan :; forge verify-contract \
   --rpc-url ${BASE_SEPOLIA_RPC} \
   ${SENDER_BASE_SEPOLIA_ADDRESS} \
-  src/CrossChainFlipACoinSender.sol:CrossChainFlipACoinSender \
-  --verifier blockscout \
+  CrossChainFlipACoinSender \
    --etherscan-api-key ${BASE_ETHERSCAN_API_KEY} \
-  --compiler-version 0.8.26
+  --compiler-version 0.8.26 --watch
+
+
+
+verify-sender-base-sepolia-tenderly :; forge verify-contract \
+  --rpc-url ${BASE_SEPOLIA_RPC} \
+  ${SENDER_BASE_SEPOLIA_ADDRESS} \
+  src/CrossChainFlipACoinSender.sol:CrossChainFlipACoinSender \
+  --verifier-url ${TENDERLY_VERIFIER_URL} \
+  --etherscan-api-key ${TENDERLY_API_KEY} \
+  --compiler-version 0.8.26 \
+  --watch

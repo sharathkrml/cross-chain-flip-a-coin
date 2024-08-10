@@ -23,21 +23,15 @@ contract CCIPTest is Test {
     CrossChainFlipACoinSender public crossChainFlipACoinSender;
     CrossChainFlipACoinReceiver public crossChainFlipACoinReceiver;
     uint64 public s_chainSelector;
-    LinkToken public s_linkToken;
-    uint256 linkInitialSupply = 1000000000000000000;
 
     function setUp() public {
         ccipLocalSimulator = new CCIPLocalSimulator();
-        (uint64 chainSelector, IRouterClient sourceRouter, IRouterClient destinationRouter,, LinkToken linkToken,,) =
+        (uint64 chainSelector, IRouterClient sourceRouter, IRouterClient destinationRouter,,,,) =
             ccipLocalSimulator.configuration();
         crossChainFlipACoinReceiver = new CrossChainFlipACoinReceiver(address(destinationRouter));
-        crossChainFlipACoinSender = new CrossChainFlipACoinSender(
-            address(sourceRouter), address(crossChainFlipACoinReceiver), chainSelector, address(linkToken)
-        );
+        crossChainFlipACoinSender =
+            new CrossChainFlipACoinSender(address(sourceRouter), address(crossChainFlipACoinReceiver), chainSelector);
         s_chainSelector = chainSelector;
-        s_linkToken = linkToken;
-
-        ccipLocalSimulator.requestLinkFromFaucet(address(crossChainFlipACoinSender), linkInitialSupply);
     }
 
     function test_prepareMessageAndGetFees() public {
@@ -60,18 +54,31 @@ contract CCIPTest is Test {
         vm.stopPrank();
     }
 
-    function test_balance() public view {
+    function test_balance() public {
+        address user1 = makeAddr("user1");
+        vm.deal(user1, 1000000000000000000);
+        vm.startPrank(user1);
+        (bool success,) = address(crossChainFlipACoinSender).call{value: 1000000000000000000}("");
+        assert(success);
         uint256 balance = crossChainFlipACoinSender.balance();
-        assertEq(balance, linkInitialSupply);
+        assertEq(balance, 1000000000000000000);
+        vm.stopPrank();
     }
 
     function test_withdraw() public {
-        uint256 balance = crossChainFlipACoinSender.balance();
-        assertEq(balance, linkInitialSupply);
-        assertEq(s_linkToken.balanceOf(address(this)), 0);
+        uint256 oldBalance = address(this).balance;
+        address user1 = makeAddr("user1");
+        vm.deal(user1, 1000000000000000000);
+        vm.startPrank(user1);
+        (bool success,) = address(crossChainFlipACoinSender).call{value: 1000000000000000000}("");
+        assert(success);
+        vm.stopPrank();
         crossChainFlipACoinSender.withdraw();
-        balance = crossChainFlipACoinSender.balance();
+        uint256 balance = crossChainFlipACoinSender.balance();
         assertEq(balance, 0);
-        assertEq(s_linkToken.balanceOf(address(this)), linkInitialSupply);
+        assertEq(address(this).balance - oldBalance, 1000000000000000000);
     }
+
+    receive() external payable {}
+    fallback() external payable {}
 }

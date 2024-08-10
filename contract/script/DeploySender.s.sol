@@ -8,12 +8,12 @@ import {CrossChainFlipACoinSender} from "../src/CrossChainFlipACoinSender.sol";
 contract DeploySender is Script, SenderConfig {
     function run() external {
         SenderConfig senderConfig = new SenderConfig();
-        (address activeRouter, address linkToken) = senderConfig.activeConfig();
+        (address activeRouter) = senderConfig.activeConfig();
         uint64 destinationChainSelector = senderConfig.destinationChainSelector();
         address receiver = senderConfig.receiver();
         vm.startBroadcast();
         CrossChainFlipACoinSender sender =
-            new CrossChainFlipACoinSender(activeRouter, receiver, destinationChainSelector, linkToken);
+            new CrossChainFlipACoinSender(activeRouter, receiver, destinationChainSelector);
         vm.stopBroadcast();
         console2.log("Deployed receiver at address: {}", address(sender));
     }
