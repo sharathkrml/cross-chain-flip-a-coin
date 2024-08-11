@@ -145,7 +145,6 @@ export const fetchAllTransactions = async () => {
     (txn) => txn.messageId
   );
   let optionsChosen = await fetchOptionChosenTxns(messageIds);
-  console.log(optionsChosen);
   let txns: ReceiverTransaction[] = [];
   for (let txn of optionsChosen.optionChosenTxns) {
     txns.push({

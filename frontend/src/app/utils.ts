@@ -109,7 +109,6 @@ export const getLiveResponse = async (
       const transactionReceipt = await eth_getTransactionReceipt(rpcRequest, {
         hash: txHash,
       });
-      console.log(transactionReceipt);
       for (const log of transactionReceipt.logs) {
         if (
           log.topics[0] ===
