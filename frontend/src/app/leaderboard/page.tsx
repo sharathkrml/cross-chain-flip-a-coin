@@ -10,51 +10,41 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/react";
+import { fetchUser, User } from "../api";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [users, setUsers] = useState<User[]>([]);
+  useEffect(() => {
+    fetchUser()
+      .then((resp) => {
+        setUsers(resp.users);
+      })
+      .catch((e) => console.log(e));
+  }, []);
+
   return (
     <main className="p-4 pb-10 min-h-[100vh] flex-row items-center justify-center container max-w-screen-lg mx-auto">
       <NavBar />
       <div className="py-20">
-        <Header />
+        <header className="flex flex-col items-center mb-20 md:mb-20">
+          <Table aria-label="Example static collection table" className="dark">
+            <TableHeader>
+              <TableColumn>User</TableColumn>
+              <TableColumn>Score</TableColumn>
+            </TableHeader>
+            <TableBody>
+              {users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{user.score}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </header>
       </div>
     </main>
-  );
-}
-
-function Header() {
-  return (
-    <header className="flex flex-col items-center mb-20 md:mb-20">
-      <Table aria-label="Example static collection table" className="dark">
-        <TableHeader>
-          <TableColumn>NAME</TableColumn>
-          <TableColumn>ROLE</TableColumn>
-          <TableColumn>STATUS</TableColumn>
-        </TableHeader>
-        <TableBody>
-          <TableRow key="1">
-            <TableCell>Tony Reichert</TableCell>
-            <TableCell>CEO</TableCell>
-            <TableCell>Active</TableCell>
-          </TableRow>
-          <TableRow key="2">
-            <TableCell>Zoey Lang</TableCell>
-            <TableCell>Technical Lead</TableCell>
-            <TableCell>Paused</TableCell>
-          </TableRow>
-          <TableRow key="3">
-            <TableCell>Jane Fisher</TableCell>
-            <TableCell>Senior Developer</TableCell>
-            <TableCell>Active</TableCell>
-          </TableRow>
-          <TableRow key="4">
-            <TableCell>William Howard</TableCell>
-            <TableCell>Community Manager</TableCell>
-            <TableCell>Vacation</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </header>
   );
 }
 

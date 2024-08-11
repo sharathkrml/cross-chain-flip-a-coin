@@ -90,6 +90,9 @@ export const getBlockScoutUrl = (chainId: number, txHash: string) => {
   }
 };
 
+export const getCCIPExplorerUrl = (messageId: string) => {
+  return `https://ccip.chain.link/msg/${messageId}`;
+};
 export const getLiveResponse = async (
   chainId: number,
   txHash: `0x${string}`
@@ -116,7 +119,17 @@ export const getLiveResponse = async (
           if (log.topics[2] && log.data) {
             let won: boolean = hexToBool(log.topics[2]);
             let isHeads: boolean = hexToBool(log.data);
-            return { won, isHeads };
+            return { won, isHeads, messageId: "" };
+          }
+        }
+        if (
+          log.topics[0] ===
+          "0xc2622afc28517b0530d70c11de39649823a6ca05411c2d38c85009a35c0b8f3b"
+        ) {
+          // OptionChosen(bytes32 indexed messageId, address indexed sender, bool indexed isHeads)
+          if (log.topics[3] && log.topics[1]) {
+            let isHeads: boolean = hexToBool(log.topics[3]);
+            return { won: false, isHeads, messageId: log.topics[1] };
           }
         }
       }
@@ -131,4 +144,31 @@ export const getLiveResponse = async (
 
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+export const convertTimestampToDate = (timestamp: number) => {
+  const date: Date = new Date(timestamp * 1000);
+  return date.toUTCString();
+};
+
+export function trimMiddle(str: string, maxLength: number) {
+  if (str.length <= maxLength) {
+    return str;
+  }
+  return (
+    str.slice(0, maxLength / 2) + "..." + str.slice(str.length - maxLength / 2)
+  );
+}
+
+export const PENDING = 845327011155111;
+
+export const getSource = (sourceChainSelector: number) => {
+  switch (sourceChainSelector.toString()) {
+    case "845327011155111":
+      return "Base Sepolia➡️Sepolia 🕢";
+    case "10344971235874465080":
+      return "Base Sepolia➡️Sepolia ✅";
+    default:
+      return "Sepolia ✅";
+  }
 };

@@ -13,24 +13,16 @@ import tails from "@public/tails.png";
 import { client } from "./client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
 import {
-  defineChain,
-  eth_getTransactionReceipt,
-  getRpcClient,
-  prepareContractCall,
-  sendTransaction,
-} from "thirdweb";
-import { sepolia, baseSepolia } from "thirdweb/chains";
-import {
-  flipACoin,
   getBlockScoutUrl,
-  getChain,
-  getReceiverContract,
-  getSenderContract,
   getLiveResponse,
   supportedChainIds,
   supportedChains,
+  getCCIPExplorerUrl,
+  flipACoin,
 } from "./utils";
+import { Spinner } from "@nextui-org/spinner";
 export default function Home() {
   const activeAccount = useActiveAccount();
   const chainMetadata = useActiveWalletChain();
@@ -82,6 +74,7 @@ function Header({ showConnectModel }: { showConnectModel: boolean }) {
     won: false,
     loading: false,
     txHash: "",
+    messageId: "",
   });
   const callHeads = async (isHeads: boolean) => {
     if (!account || !chainMetadata) {
@@ -93,6 +86,7 @@ function Header({ showConnectModel }: { showConnectModel: boolean }) {
       won: false,
       loading: true,
       txHash: "",
+      messageId: "",
     });
     let txHash = await flipACoin({
       chainId: chainMetadata.id,
@@ -102,15 +96,17 @@ function Header({ showConnectModel }: { showConnectModel: boolean }) {
     if (!txHash) {
       return;
     }
-    // setTxHash(txHash);
     setLiveResponse({
       optionChosen: true,
       isHeads: isHeads,
       won: false,
       loading: true,
       txHash: txHash,
+      messageId: "",
     });
+
     let resp = await getLiveResponse(chainMetadata.id, txHash);
+    // let resp = await getLiveResponse(chainMetadata.id, txHash);
     setLiveResponse({
       ...resp,
       loading: false,
@@ -126,6 +122,7 @@ function Header({ showConnectModel }: { showConnectModel: boolean }) {
       won: false,
       loading: false,
       txHash: "",
+      messageId: "",
     });
   };
 
@@ -148,10 +145,10 @@ function Header({ showConnectModel }: { showConnectModel: boolean }) {
         <Image src={CoverImg} alt="" className="w-1/3" />
       )}
       {liveResponse.loading ? (
-        <span>Loading...</span>
+        <Spinner label="Loading..." color="warning" />
       ) : (
         <>
-          {liveResponse.optionChosen && (
+          {liveResponse.optionChosen && !liveResponse.messageId && (
             <>
               {liveResponse.won ? (
                 <span className="inline-block -skew-x-6 text-blue-500">
@@ -176,6 +173,19 @@ function Header({ showConnectModel }: { showConnectModel: boolean }) {
               rel="noopener noreferrer"
             >
               {liveResponse.txHash}
+            </a>
+          </span>
+        </>
+      )}
+      {liveResponse.messageId && (
+        <>
+          <span className="inline-block -skew-x-6 text-blue-500 underline">
+            <a
+              href={getCCIPExplorerUrl(liveResponse.messageId)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {getCCIPExplorerUrl(liveResponse.messageId)}
             </a>
           </span>
         </>
@@ -235,6 +245,7 @@ const NavBar = ({ showConnectModel }: { showConnectModel: boolean }) => {
         )}
       </li>
       <NavBarElement link="/leaderboard" text="Leaderboard" />
+      <NavBarElement link="/transactions" text="Transactions" />
     </ul>
   );
 };

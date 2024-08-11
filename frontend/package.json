@@ -14,6 +14,7 @@
 		"@nextui-org/table": "^2.0.39",
 		"@nextui-org/theme": "^2.2.9",
 		"framer-motion": "^11.3.24",
+		"graphql-request": "^7.1.0",
 		"next": "14.1.0",
 		"react": "^18.3",
 		"react-dom": "^18.3",

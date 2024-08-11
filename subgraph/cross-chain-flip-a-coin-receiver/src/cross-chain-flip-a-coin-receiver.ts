@@ -14,7 +14,7 @@ export function handleMessageReceivedAndResult(event: MessageReceivedAndResult):
     flipResultTxn.option = "TAILS"
   }
   flipResultTxn.won = event.params.won
-  let user = getOrCreateUser(event.params.sender)
+  let user = getOrCreateUser(event.params.user)
   if (event.params.won) {
     user.score = user.score.plus(BigInt.fromI32(1))
   } else {
