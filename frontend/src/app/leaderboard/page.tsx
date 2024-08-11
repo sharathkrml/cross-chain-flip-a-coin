@@ -2,6 +2,15 @@
 import Image from "next/image";
 import CoverImg from "@public/coinflip-cover.gif";
 import Link from "next/link";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@nextui-org/react";
+
 export default function Home() {
   return (
     <main className="p-4 pb-10 min-h-[100vh] flex-row items-center justify-center container max-w-screen-lg mx-auto">
@@ -16,13 +25,35 @@ export default function Home() {
 function Header() {
   return (
     <header className="flex flex-col items-center mb-20 md:mb-20">
-      <h1 className="text-2xl md:text-6xl font-semibold md:font-bold tracking-tighter mb-6 text-zinc-100">
-        Cross Chain
-        <span className="inline-block -skew-x-6 text-blue-500">
-          Flip-A-Coin
-        </span>
-      </h1>
-      <Image src={CoverImg} alt="" className="w-1/3" />
+      <Table aria-label="Example static collection table" className="dark">
+        <TableHeader>
+          <TableColumn>NAME</TableColumn>
+          <TableColumn>ROLE</TableColumn>
+          <TableColumn>STATUS</TableColumn>
+        </TableHeader>
+        <TableBody>
+          <TableRow key="1">
+            <TableCell>Tony Reichert</TableCell>
+            <TableCell>CEO</TableCell>
+            <TableCell>Active</TableCell>
+          </TableRow>
+          <TableRow key="2">
+            <TableCell>Zoey Lang</TableCell>
+            <TableCell>Technical Lead</TableCell>
+            <TableCell>Paused</TableCell>
+          </TableRow>
+          <TableRow key="3">
+            <TableCell>Jane Fisher</TableCell>
+            <TableCell>Senior Developer</TableCell>
+            <TableCell>Active</TableCell>
+          </TableRow>
+          <TableRow key="4">
+            <TableCell>William Howard</TableCell>
+            <TableCell>Community Manager</TableCell>
+            <TableCell>Vacation</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </header>
   );
 }
