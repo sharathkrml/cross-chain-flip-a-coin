@@ -8,7 +8,8 @@
     "create-local": "graph create --node http://localhost:8020/ cross-chain-flip-a-coin-receiver",
     "remove-local": "graph remove --node http://localhost:8020/ cross-chain-flip-a-coin-receiver",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 cross-chain-flip-a-coin-receiver",
-    "cbd": "graph codegen && graph build && yarn deploy"
+    "cbd": "graph codegen && graph build && goldsky subgraph deploy CrossChainFlipACoinReceiver/1.0.0",
+    "delete": "goldsky subgraph delete CrossChainFlipACoinReceiver/1.0.0"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.80.0",
