@@ -41,7 +41,7 @@ export default function Home() {
         });
       }
     }
-  }, [chainMetadata]);
+  }, [chainMetadata, networkSwitcher]);
 
   return (
     <main className="p-4 pb-10 min-h-[100vh] flex-row items-center justify-center container max-w-screen-lg mx-auto">
