@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: CrossChainFlipACoinReceiver
-    network: mainnet
+    network: sepolia
     source:
       address: "0x96D9E26D3C6f71838aC2DceF23b256ED51a75E1A"
       abi: CrossChainFlipACoinReceiver
