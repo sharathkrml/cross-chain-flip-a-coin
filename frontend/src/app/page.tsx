@@ -27,7 +27,7 @@ import {
   getChain,
   getReceiverContract,
   getSenderContract,
-  getTxReceipt,
+  getLiveResponse,
   supportedChainIds,
   supportedChains,
 } from "./utils";
@@ -76,12 +76,24 @@ export default function Home() {
 function Header({ showConnectModel }: { showConnectModel: boolean }) {
   const chainMetadata = useActiveWalletChain();
   const account = useActiveAccount();
-  const [txHash, setTxHash] = useState("");
-
+  const [liveResponse, setLiveResponse] = useState({
+    optionChosen: false,
+    isHeads: false,
+    won: false,
+    loading: false,
+    txHash: "",
+  });
   const callHeads = async (isHeads: boolean) => {
     if (!account || !chainMetadata) {
       return;
     }
+    setLiveResponse({
+      optionChosen: false,
+      isHeads: isHeads,
+      won: false,
+      loading: true,
+      txHash: "",
+    });
     let txHash = await flipACoin({
       chainId: chainMetadata.id,
       isHeads,
@@ -90,8 +102,31 @@ function Header({ showConnectModel }: { showConnectModel: boolean }) {
     if (!txHash) {
       return;
     }
-    setTxHash(txHash);
-    getTxReceipt(chainMetadata.id, txHash);
+    // setTxHash(txHash);
+    setLiveResponse({
+      optionChosen: true,
+      isHeads: isHeads,
+      won: false,
+      loading: true,
+      txHash: txHash,
+    });
+    let resp = await getLiveResponse(chainMetadata.id, txHash);
+    setLiveResponse({
+      ...resp,
+      loading: false,
+      txHash: txHash,
+      optionChosen: true,
+    });
+  };
+
+  const reset = () => {
+    setLiveResponse({
+      optionChosen: false,
+      isHeads: false,
+      won: false,
+      loading: false,
+      txHash: "",
+    });
   };
 
   return (
@@ -102,10 +137,52 @@ function Header({ showConnectModel }: { showConnectModel: boolean }) {
           Flip-A-Coin
         </span>
       </h1>
-      <Image src={CoverImg} alt="" className="w-1/3" />
+      {liveResponse.optionChosen ? (
+        <>
+          <span className="inline-block -skew-x-6 text-blue-500">
+            You chose
+          </span>
+          <Image src={liveResponse.isHeads ? heads : tails} alt="" />
+        </>
+      ) : (
+        <Image src={CoverImg} alt="" className="w-1/3" />
+      )}
+      {liveResponse.loading ? (
+        <span>Loading...</span>
+      ) : (
+        <>
+          {liveResponse.optionChosen && (
+            <>
+              {liveResponse.won ? (
+                <span className="inline-block -skew-x-6 text-blue-500">
+                  You won!!
+                </span>
+              ) : (
+                <span className="inline-block -skew-x-6 text-blue-500">
+                  You lost!!
+                </span>
+              )}
+            </>
+          )}
+        </>
+      )}
+      {liveResponse.txHash && (
+        <>
+          <span className="inline-block -skew-x-6 text-blue-500 underline">
+            txHash:{" "}
+            <a
+              href={getBlockScoutUrl(chainMetadata!.id, liveResponse.txHash)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {liveResponse.txHash}
+            </a>
+          </span>
+        </>
+      )}
       {showConnectModel && (
         <>
-          {txHash.length == 0 ? (
+          {!liveResponse.optionChosen ? (
             <>
               <span className="inline-block -skew-x-6 text-blue-500">
                 Choose one!!
@@ -130,24 +207,12 @@ function Header({ showConnectModel }: { showConnectModel: boolean }) {
               </div>
             </>
           ) : (
-            <>
-              <span className="inline-block -skew-x-6 text-blue-500 underline">
-                Transaction Successful!!, txHash:{" "}
-                <a
-                  href={getBlockScoutUrl(chainMetadata!.id, txHash)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {txHash}
-                </a>
-              </span>
-              <button
-                onClick={() => setTxHash("")}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
-              >
-                GO AGAIN!!!
-              </button>
-            </>
+            <button
+              onClick={() => reset()}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
+            >
+              GO AGAIN!!!
+            </button>
           )}
         </>
       )}
